@@ -10345,7 +10345,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 			var innermostIntersecting = false,
 				sortable = this;
 
-			// Copy over variables that sortable's _intersectsWith uses
+			// Copy over variables.js that sortable's _intersectsWith uses
 			sortable.positionAbs = draggable.positionAbs;
 			sortable.helperProportions = draggable.helperProportions;
 			sortable.offset.click = draggable.offset.click;
@@ -10355,7 +10355,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 
 				$.each( draggable.sortables, function() {
 
-					// Copy over variables that sortable's _intersectsWith uses
+					// Copy over variables.js that sortable's _intersectsWith uses
 					this.positionAbs = draggable.positionAbs;
 					this.helperProportions = draggable.helperProportions;
 					this.offset.click = draggable.offset.click;
@@ -10398,7 +10398,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 					sortable._mouseStart( event, true, true );
 
 					// Because the browser event is way off the new appended portlet,
-					// modify necessary variables to reflect the changes
+					// modify necessary variables.js to reflect the changes
 					sortable.offset.click.top = draggable.offset.click.top;
 					sortable.offset.click.left = draggable.offset.click.left;
 					sortable.offset.parent.left -= draggable.offset.parent.left -
@@ -15589,7 +15589,7 @@ var widgetsSortable = $.widget( "ui.sortable", $.ui.mouse, {
 		//Rearrange
 		for ( i = this.items.length - 1; i >= 0; i-- ) {
 
-			//Cache variables and intersection, continue if no intersection
+			//Cache variables.js and intersection, continue if no intersection
 			item = this.items[ i ];
 			itemElement = item.item[ 0 ];
 			intersection = this._intersectsWithPointer( item );
