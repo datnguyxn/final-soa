@@ -4,6 +4,7 @@ dotenv.config();
 export default {
     ENV: process.env.ENV,
     PORT: process.env.PORT,
+    PORT_EMAIL: process.env.PORT_EMAIL,
     URL: process.env.URL,
     MONGO_URI: process.env.DATABASE_URL ,
     JWT_ACCESS: process.env.JWT_ACCESS_TOKEN,

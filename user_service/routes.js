@@ -13,6 +13,7 @@ const routes = (app) => {
 
 // Apply the rate limiting middleware to all requests
     app.use('/api/v1/auth', authRoutes)
+    app.use('/api/user', userRoutes)
     app.use((err, req, res, next) => {
         console.log(err);
         res.status(500).json({error: err.message})
@@ -29,8 +30,8 @@ const routes = (app) => {
     table.setHeading(...COLUMNS_NAME);
 
     [
-        {name: '/auth', route: authRoutes},
-        {name: '/user', route: userRoutes},
+        {name: '/api/v1/auth', route: authRoutes},
+        {name: '/api/user', route: userRoutes},
     ].forEach(router => {
         router.route.stack.forEach(layer => {
             if (layer.route) {

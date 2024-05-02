@@ -5,7 +5,7 @@ class UserController {
     async deleteAll(req, res) {
         try {
             await deleteAll()
-            return res.status(200).json({message: "Delete all account successfully"})
+            return res.status(200).json({message: "Delete all user successfully"})
         } catch (e) {
             return res.status(500).json({message: e.message})
         }
@@ -14,11 +14,11 @@ class UserController {
     async find(req, res) {
         try {
             console.log(req.body)
-            const account = await find(req.body)
-            if (account == null) {
-                return res.status(404).json({message: "Account not found"})
+            const user = await find(req.body)
+            if (user == null) {
+                return res.status(404).json({message: "User not found"})
             }
-            return res.status(200).json(account)
+            return res.status(200).json(user)
         } catch (e) {
         }
     }
@@ -26,38 +26,25 @@ class UserController {
     async getAll(req, res) {
         try {
             const page = req.query.page || 1
-            const accounts = await getAll()
-            if (accounts == null) {
-                return res.status(404).json({message: "No Accounts found"})
+            const users = await getAll()
+            if (users == null) {
+                return res.status(404).json({message: "No Users found"})
             } else {
-                return paginate(accounts, page, 10)
+                return res.status(200).json(paginate(users, page, 10))
             }
         } catch (e) {
             console.log(e)
             return res.status(500).json({message: e.message})
         }
     }
-    async getOne(req, res) {
-        try {
-            const id = req.user.id;
-            const account = await findAccount(id);
-            if (account == null) {
-                throw new Error("Account not found");
-            }
-            return account;  // Return the account data
-        } catch (e) {
-            console.log(e);
-            throw e;  // Rethrow the error to be handled in the router
-        }
-    }
 
     async delete(req, res) {
         try {
-            const account = await deleteOne(req.params.id)
-            if (account == null) {
-                return res.status(404).json({message: "Account not found"})
+            const user = await deleteOne(req.params.id)
+            if (user == null) {
+                return res.status(404).json({message: "User not found"})
             }
-            return res.status(200).json({message: account})
+            return res.status(200).json({message: user})
         } catch (e) {
             console.log(e)
             return res.status(500).json({message: e.message})
@@ -66,27 +53,27 @@ class UserController {
 
     async update(req, res) {
         try {
-            const account = await update(req.params.id, req.body)
-            if (account == null) {
-                return res.status(404).json({message: account})
+            const user = await update(req.params.id, req.body)
+            if (user == null) {
+                return res.status(404).json({message: user})
             }
-            return res.status(200).json({message: account})
+            return res.status(200).json({message: user})
         } catch (e) {
             console.log(e)
             return res.status(500).json({message: e.message})
         }
     }
 
-    async lockAccount(req, res) {
+    async lockUser(req, res) {
         try {
-            const account = await lockUser(req.params.id)
-            if (account == null) {
-                return res.status(404).json({message: "Account not found"})
+            const user = await lockUser(req.params.id)
+            if (user == null) {
+                return res.status(404).json({message: "User not found"})
             }
-            if (account.status === 400) {
-                return res.status(400).json({message: account.message})
+            if (user.status === 400) {
+                return res.status(400).json({message: user.message})
             }
-            return res.status(200).json({message: account})
+            return res.status(200).json({message: user})
         } catch (e) {
             console.log(e)
             return res.status(500).json({message: e.message})
