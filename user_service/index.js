@@ -4,6 +4,7 @@ import connect from '././src/config/database.connect.js';
 import Table from 'ascii-table';
 import routes from "./routes.js";
 import morgan from "morgan";
+import session from 'express-session';
 
 const table = new Table('App Configuration');
 
@@ -13,6 +14,15 @@ app.use(express.urlencoded({extended: true}));
 app.use(morgan('combined'));
 
 const dbConnectStatus = await connect();
+
+app.use(
+  session({
+    secret: "my-secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 
 const PORT = variables.PORT;
 
