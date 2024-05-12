@@ -64,9 +64,20 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const getCategory = async (req, res) => {
+  try {
+    const categories = await Category.find().exec();
+    res.json(categories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
+
 module.exports = {
   getCategories,
   createCategory,
   deleteCategory,
   updateCategory,
+  getCategory
 };

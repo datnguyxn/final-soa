@@ -11,7 +11,10 @@ const {
   changeOrderStatus,
   updateOrderStatusWithGHN,
   downloadInvoiceInWeb,
-  downloadInvoiceInPos
+  downloadInvoiceInPos,
+  createOrderForCheckoutInPos,
+  getOrderByIdUseQuery,
+  getOrderOfCustomer
 } = require("../controllers/orderController");
 
 router.get("/order-of-user", getOrderOfUser);
@@ -24,4 +27,7 @@ router.put("/change-order-status", changeOrderStatus);
 router.post("/update-order-status-ghn", updateOrderStatusWithGHN);
 router.get("/dow-invoice-web/:orderId", downloadInvoiceInWeb);
 router.get("/dow-invoice-pos/:orderId", downloadInvoiceInPos);
+router.post("/create-order-checkout-pos", createOrderForCheckoutInPos);
+router.get("/get-order-by-id", getOrderByIdUseQuery);
+router.get("/order-of-customer", getOrderOfCustomer);
 module.exports = router;

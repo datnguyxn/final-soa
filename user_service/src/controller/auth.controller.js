@@ -115,14 +115,14 @@ class AuthController {
             console.log('Valid token.');
             const account = await setActive(req.query.email);
             if (account == null) {
-                return res.status(400).json({errors: "User not found"});
+                return res.redirect("http://localhost:3002");
             }
-            return res.status(200).json({message: "Active success"});
+            return res.redirect("http://localhost:3002/");
         } else {
             res.clearCookie("refreshToken");
             res.clearCookie("role");
             console.log('Invalid token.');
-            return res.status(400).json({errors: "Invalid token"});
+            return res.redirect("http://localhost:3002");
         }
     }
 
@@ -141,11 +141,12 @@ class AuthController {
     async changePassword(req, res) {
         try {
             const data = {
-                id: req.user.id,
+                id: req.body.id,
                 oldPassword: req.body.oldPassword,
                 newPassword: req.body.newPassword,
                 confirmPassword: req.body.confirmPassword
             }
+            console.log(data)
             const account = await changePassword(data);
             if (account == null) {
                 return res.status(400).json({errors: "Account not found"});
@@ -158,6 +159,21 @@ class AuthController {
             console.log(e)
             return res.status(500).json({errors: "Server errors"});
         }
+    }
+
+    async logout(req, res) {
+        req.session.destroy();
+        res.clearCookie("refreshToken");
+        res.clearCookie("role");
+        return res.status(200).json({message: "Logout success"});
+    }
+
+    checkAuth(req, res) {
+        console.log(req.session.users)
+        if (req.session.users) {
+            return res.status(200).json(req.session.users);
+        }
+        return res.status(400).json({message: "User not found"});
     }
 }
 

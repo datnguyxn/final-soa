@@ -2,7 +2,7 @@ const disabledKeys = ["u", "I"];
 
 const showAlert = e => {
     e.preventDefault();
-    return alert("Sorry, you can't view or copy source codes this way!");
+    return alert("Sorry, you can't views or copy source codes this way!");
 }
 
 document.addEventListener("contextmenu", e => {

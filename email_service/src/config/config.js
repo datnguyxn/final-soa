@@ -6,7 +6,7 @@ import * as path from 'path';
 
 const config = (app) => {
     app.engine('ejs', ejs.renderFile);
-    app.set('view engine', 'ejs');
+    app.set('views engine', 'ejs');
 
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));

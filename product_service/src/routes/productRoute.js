@@ -13,7 +13,13 @@ const {
   getProductInShop,
   getDetailProduct,
   getColorPriceWithCapacity,
-  updateProductStock
+  updateProductStock,
+  getProductWithOutId,
+  getAllProducts,
+  getProductByBarCodeButDataIsNumber,
+  getProductByBarCodeButDataIsString,
+  getProductByQuery,
+  updateProductWhenOrder
 } = require("../controllers/productController");
 
 const storage = multer.diskStorage({
@@ -36,6 +42,12 @@ router.get("/detail/:id", getDetailProduct);
 router.get("/shop", getProductInShop);
 router.post("/colorPriceWithCapacity", getColorPriceWithCapacity);
 
+router.get("/getProductWithOutId", getProductWithOutId);
+router.get("/getAllProducts", getAllProducts);
+router.get("/getProductByBarCodeButDataIsNumber", getProductByBarCodeButDataIsNumber);
+router.get("/getProductByBarCodeButDataIsString", getProductByBarCodeButDataIsString);
+router.get("/getProductByQuery", getProductByQuery);
+router.get("/updateProductWhenOrder/:id", updateProductWhenOrder);
 router.get("/:id", getProductById);
 
 module.exports = router;

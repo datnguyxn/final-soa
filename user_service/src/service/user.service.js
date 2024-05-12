@@ -42,19 +42,20 @@ async function getAll() {
     }
 }
 
-async function update(data) {
+async function updateUser(data) {
     try {
+        console.log(data)
         const account = await User.findOneAndUpdate({
                 _id: data._id
             },
             {
-                $push: {
-                    invoices: {
-                        $each: [data.invoices],
-                        $position: 0
-                    }
-                }
-            })
+                username: data.username,
+                fullname: data.fullname,
+                email: data.email,
+            },
+            { new: true }
+            )
+        console.log(account)
         if (account == null) {
             return null
         } else {
@@ -110,7 +111,7 @@ async function deleteOne(id) {
 export {
     deleteAll,
     deleteOne,
-    update,
+    updateUser,
     lockUser,
     find,
     getAll,

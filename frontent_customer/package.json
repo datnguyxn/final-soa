@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm start",
-    "start": "node src\\index.js"
+    "start": "node src/index.js"
   },
   "author": "QuangLoi",
   "license": "ISC",

@@ -218,27 +218,15 @@ const cancelOrder = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
   let { page, pageSize, search, orderType } = req.query;
-  // Set default values if not provided
-  page = page ? parseInt(page, 10) : 1;
-  pageSize = pageSize ? parseInt(pageSize, 10) : 6;
-
-  // Create a MongoDB query object based on search criteria
+  console.log({ page, pageSize, search, orderType })
   const query = {};
-  if (search) {
-    try {
-      query._id = new ObjectId(search);
-    } catch (error) {
-      req.session.orderMessage = {
-        type: "danger",
-        message: "Hãy nhập đầy đủ mã hóa đơn",
-      };
-    }
+  if (search !== "undefined" && search !== '') {
+     query._id = new mongoose.Types.ObjectId(search);
   }
   // Add condition to filter by order type
   if (orderType) {
     query.order_type = orderType;
   }
-
   // Fetch orders with pagination and search
   const orders = await Order.find(query)
     .skip((page - 1) * pageSize)
@@ -269,13 +257,14 @@ const getAllOrder = async (req, res) => {
     created: moment(order.created).format("DD/MM/YYYY HH:mm:ss"),
     total_amount: formatCurrency(order.total_amount),
   }));
-  res.json({ orders: plainOrder, pagination, totalPages, orderType, search });
+  res.json({ plainOrder, pagination, totalPages, orderType, search });
 };
 
 const changeOrderStatus = async (req, res) => {
   try {
     const orderId = req.body.id;
     const newStatus = req.body.status;
+    console.log(orderId, newStatus)
     const order = await Order.findById(orderId);
     if (!order) {
       res.status(404).json({ error: "Order not found." });
@@ -849,6 +838,91 @@ const downloadInvoiceInPos = async (req, res) => {
     res.status(500).json({ error: "Error fetching order data" });
   }
 };
+
+const createOrderForCheckoutInPos = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let productsArray = [];
+    let allProducts = [];
+    const {
+      totalAmount,
+      paymentMethod,
+      products,
+      customerName,
+      amount_given,
+      change_given,
+      discount,
+      nameStaff,
+    } = req.body;
+
+    for (const product of products) {
+      let productResponse = await axios("http://localhost:3456/api/product/updateProductWhenOrder/" + product.product_id + "?capacity=" + product.capacity + "&color=" + product.color + "&quantity=" + product.quantity)
+      console.log(productResponse.data)
+      productsArray = Object.values(productResponse.data.productMap);
+      allProducts.push(...productsArray);
+    }
+
+    const productsWithSerialNumbers = products.map((product, index) => ({
+      ...product,
+      product_name:
+          product.product_name +
+          " (" +
+          allProducts[index].serialNumbers.join(", ") +
+          ")",
+    }));
+    // Iterate through each product in the order
+
+    const newOrder = new Order({
+      customer_id: id,
+      customer_name: customerName,
+      staff_name: nameStaff,
+      total_amount: totalAmount,
+      payment_method: paymentMethod,
+      products: productsWithSerialNumbers,
+      amount_given: amount_given,
+      change_given: change_given,
+      discount: discount,
+      order_type: "pos",
+      order_status: "completed",
+    });
+    const savedOrder = await newOrder.save();
+    res.json({
+      success: true,
+      message: "Order saved to the database.",
+      order: savedOrder,
+    });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    res.json({
+      success: false,
+      error: "An error occurred while saving the order.",
+    });
+  }
+};
+
+const getOrderByIdUseQuery = async (req, res) => {
+  try {
+    const orderId = req.query.orderId;
+    const order = await Order.findById(orderId);
+    res.json(order);
+  } catch (error) {
+    console.error("Error fetching order by ID:", error);
+    res.status(500).json({ error: "An error occurred while fetching order." });
+  }
+}
+
+const getOrderOfCustomer = async (req, res) => {
+  try {
+    let customerName = req.query.name;
+    const orders = await Order.find({ customer_name: customerName });
+    console.log(orders)
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders of customer:", error);
+    res.status(500).json({ error: "An error occurred while fetching orders." });
+  }
+}
+
 module.exports = {
   getOrderOfUser,
   getOrderByOrderId,
@@ -860,4 +934,7 @@ module.exports = {
   updateOrderStatusWithGHN,
   downloadInvoiceInWeb,
   downloadInvoiceInPos,
+  createOrderForCheckoutInPos,
+  getOrderByIdUseQuery,
+  getOrderOfCustomer
 };
